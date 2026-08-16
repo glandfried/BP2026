@@ -1,0 +1,1764 @@
+\newif\ifen
+\newif\ifes
+\newif\iffr
+\newcommand{\fr}[1]{\iffr#1 \fi}
+\newcommand{\En}[1]{\ifen#1\fi}
+\newcommand{\Es}[1]{\ifes#1\fi}
+\estrue
+\documentclass[shownotes,aspectratio=169]{beamer}
+
+\usepackage{hyperref}
+\usepackage{siunitx}
+\input{../auxiliar/tex/diapo_encabezado.tex}
+\input{../auxiliar/tex/tikzlibrarybayesnet.code.tex}
+ \mode<presentation>
+ {
+ %   \usetheme{Madrid}      % or try Darmstadt, Madrid, Warsaw, ...
+ %   \usecolortheme{default} % or try albatross, beaver, crane, ...
+ %   \usefonttheme{serif}  % or try serif, structurebold, ...
+  \usetheme{Antibes}
+  \setbeamertemplate{navigation symbols}{}
+ }
+\estrue
+\usepackage{todonotes}
+\setbeameroption{show notes}
+%
+\newcommand{\gray}{\color{black!55}}
+\usepackage{ulem} % sout
+\usepackage{mdframed}
+\usepackage{comment}
+\usepackage{listings}
+\lstset{
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=true,
+  columns=flexible,
+  basicstyle={\ttfamily},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4,
+  showlines=true
+}
+
+
+\begin{document}
+
+\color{black!85}
+\large
+%
+% \begin{frame}[plain,noframenumbering]
+%
+%
+% \begin{textblock}{160}(0,0)
+% \includegraphics[width=1\textwidth]{../auxiliar/download/deforestacion}
+% \end{textblock}
+%
+% \begin{textblock}{80}(18,9)
+% \textcolor{black!15}{\fontsize{44}{55}\selectfont Verdades}
+% \end{textblock}
+%
+% \begin{textblock}{47}(85,70)
+% \centering \textcolor{black!15}{{\fontsize{52}{65}\selectfont Empíricas}}
+% \end{textblock}
+%
+% \begin{textblock}{80}(100,28)
+% \LARGE  \textcolor{black!15}{\rotatebox[origin=tr]{-3}{\scalebox{9}{\scalebox{1}[-1]{$p$}}}}
+% \end{textblock}
+%
+% \begin{textblock}{80}(66,43)
+% \LARGE  \textcolor{black!15}{\scalebox{6}{$=$}}
+% \end{textblock}
+%
+% \begin{textblock}{80}(36,29)
+% \LARGE  \textcolor{black!15}{\scalebox{9}{$p$}}
+% \end{textblock}
+%
+% %
+% %
+% % \begin{textblock}{160}(01,81)
+% % \footnotesize \textcolor{black!5}{\textbf{\small Seminario ``Acuerdos intersubjetivos''\\
+% % Comunidad Bayesiana Plurinacional} \\}
+% % \end{textblock}
+%
+% \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}[plain,noframenumbering]
+\begin{textblock}{160}(0,43)
+\includegraphics[width=1\textwidth]{../auxiliar/download/modelosGraficos}
+\end{textblock}
+
+
+\begin{textblock}{160}(4,4)
+\LARGE \textcolor{black!85}{\fontsize{22}{0}\selectfont \textbf{Especificación y evaluación de modelos}} \\
+\LARGE Parte 1.
+\end{textblock}
+% \begin{textblock}{160}(4,12)
+% \LARGE \textcolor{black!85}{\fontsize{22}{0}\selectfont \textbf{algoritmos de inferencia}}
+% \end{textblock}
+
+\begin{textblock}{150}(5,29)
+
+Aprendizaje basado en modelos. Distribuciones de creencias honestas. Las reglas de razonamiento en contextos de incertidumbre. Métodos gráficos de especificación matemática de argumentos causales. Evaluación de modelos causales alternativos.
+\end{textblock}
+%
+% \begin{textblock}{55}[0,0](72,23)
+% \begin{turn}{0}
+% \parbox{10cm}{\sloppy\setlength\parfillskip{0pt}
+% \textcolor{black!85}{Unidad 1} \\
+% \small\textcolor{black!85}{Aprendizaje basado en modelos. Distribuciones de creencias} \\
+% \small\textcolor{black!85}{honestas. Las reglas de razonamiento en contextos de} \\
+% \small\textcolor{black!85}{incertidumbre. Métodos gráficos de especificación matemática} \\
+% \small\textcolor{black!85}{de argumentos causales. Evaluación de modelos causales alternativos} \\
+% }
+% \end{turn}
+% \end{textblock}
+
+\end{frame}
+
+
+%
+% \begin{frame}[plain]
+% \begin{textblock}{160}(00,04)
+% \centering \LARGE Bibliografía Unidad 1
+% \end{textblock}
+% \vspace{1.5cm} \normalsize
+% %
+%
+% \ \ \ \ $\bullet$ Bishop, C. \textbf{\textit{Model-based machine learning}}. Philosophical Transactions of the Royal Society A. 2013. \href{https://github.com/glandfried/biblio/releases/download/teca/bishop2013-mbmlpaper.pdf}{(Descargar)}. (lectura 1-4) \\[0.2cm]
+%
+% \ \ \ \ $\bullet$ Bishop, C. \textit{Pattern recognition and machine learning}. Springer; 2006 \href{https://github.com/glandfried/biblio/releases/download/teca/bishop2013-mbmlpaper.pdf}{(Descargar)}. (lecturas 1.1-1.3, 2.1-2.3, 3.3-3.4)  \\[0.75cm]
+%
+% Otras: \\[0.1cm]
+%
+%
+% \ \ \ \ $\bullet$ Jaynes ET. \textit{Bayesian methods: General background}; 1984. \href{https://github.com/glandfried/biblio/releases/download/teca/jaynes1984}{(Descargar)}. (lectura paper) \\[0.2cm]
+%
+% \ \ \ \ $\bullet$ Klimovsky G. \textit{Las desventuras del conocimiento científico}; 1994 \href{https://github.com/glandfried/biblio/releases/download/teca/klimovsky1994}{(Descargar)}. (lectura 2,4) \\[0.2cm]
+%
+% \ \ \ \ $\bullet$ Samaja J. \textit{Epistemología y metodología: elementos para una teoría de la investigación científica}. EUDEBA; 1999. \href{https://github.com/glandfried/biblio/releases/download/teca/samaja1999-epistemologiaMetodologia}{(Descargar)}. (lectura 3) \\[0.2cm]
+%
+%
+% \end{frame}
+
+\begin{frame}[plain]
+\begin{textblock}{160}(00,04)
+\centering
+\LARGE Verdad
+\end{textblock}
+\vspace{1.3cm} \large
+
+\centering
+
+ La ciencia tiene pretensión de verdad, de alcanzar\\
+
+\textbf{acuerdos intersubjetivos que valgan para todas las personas}
+
+\vspace{0.7cm}
+
+\pause
+
+ \large Ciencias formales  \\
+ \large  Sistemas axiomáticos \textbf{cerrados} sin incertidumbre\\
+
+ \vspace{0.3cm}
+
+  \pause
+
+ \large Ciencias con datos  \\
+\large Sistemas naturales \textbf{abiertos} con incertidumbre
+
+\pause
+\vspace{0.6cm}
+
+\Large
+
+¿Qué es una verdad en \\ contextos de incertidumbre?
+%
+% \pause
+% \vspace{0.2cm}
+%
+%
+% Sí. Podemos evitar mentir.
+
+\end{frame}
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(00,04)
+\centering
+\only<1>{\LARGE ¿Todo vale lo mismo?}\only<2>{\Large Ouch!.. Me estás pisando el cuello!}\only<3>{\Large Bueno, es un punto de vista. Se podría decir que me querés hacer tropezar.}\only<4>{\Large En la posmodernidad ya no hay objetividad, toda historia es igualmente válida}\only<5->{\Large \ Pero me sigues pisando el cuello!\hfill Nunca fuiste a la universidad? \ } \\
+\end{textblock}
+\vspace{1cm} \large
+
+
+\only<2>{
+\begin{textblock}{160}(0,14) \centering
+\includegraphics[width=0.45\textwidth, page={6}]{../auxiliar/download/sidewalk_bubblegum_1997_1}
+\end{textblock}}
+ \only<3>{
+\begin{textblock}{160}(0,14) \centering
+\includegraphics[width=0.45\textwidth, page={6}]{../auxiliar/download/sidewalk_bubblegum_1997_2}
+\end{textblock}}
+\only<4>{
+\begin{textblock}{160}(0,14) \centering
+\includegraphics[width=0.45\textwidth, page={6}]{../auxiliar/download/sidewalk_bubblegum_1997_3}
+\end{textblock}}
+\only<5>{
+\begin{textblock}{160}(0,14) \centering
+\includegraphics[width=0.45\textwidth, page={6}]{../auxiliar/download/sidewalk_bubblegum_1997_4}
+\end{textblock}}
+
+\end{frame}
+
+\begin{frame}[plain]
+\only<2->{
+\begin{textblock}{160}(0,3) \centering
+\Large Al menos sabemos cómo no mentir
+\end{textblock}
+}
+\only<1>{
+\begin{textblock}{160}(0,34) \centering
+\LARGE ¿Puede haber una verdad si justamente \\ tenemos incertidumbre sobre su valor real?
+\end{textblock}
+}
+\vspace{2cm}
+
+\pause
+\pause
+
+\Large
+
+\centering
+
+$\bullet$ No afirmar más de lo que se conoce \pause
+
+$\bullet$ Sin ocultar aquello que sí se conoce
+
+\pause \centering \vspace{1cm}
+
+\Large
+
+\textbf{¿Cómo exactamente?}
+
+
+\end{frame}
+
+
+\begin{frame}[plain]
+ \begin{textblock}{160}(0,3)
+ \centering \LARGE \only<2>{Certeza absoluta}\only<3>{Distribución de creencias \\ }\only<4-5>{Distribución de creencias \\ \Large Honesta }
+ \only<6->{¿Cómo preservamos los acuerdos intersubjetivos?\\}
+\end{textblock}
+\vspace{1.5cm}
+\centering
+
+
+\only<1>{
+\begin{textblock}{160}(0,62)
+\Large Detrás de una de estas caja hay un regalo. \\[0.1cm]
+
+\large ¿Dónde está el regalo?
+\end{textblock}
+}
+
+\only<1>{
+\begin{textblock}{160}(0,28)
+ \scalebox{1.1}{
+\tikz{ %
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+
+         \node[const, above=of p1, yshift=0.1cm] (np1) {\Large $?$};
+         \node[const, above=of p2, yshift=0.1cm] (np2) {\Large $?$};
+         \node[const, above=of p3, yshift=0.1cm] (np3) {\Large $?$};
+         }
+}
+\end{textblock}
+}
+
+\only<2>{
+\begin{textblock}{160}(0,28)
+ \scalebox{1.1}{
+\tikz{ %
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+
+         \node[const, above=of p1, yshift=0.125cm] (np1) {\Large $0$};
+         \node[const, above=of p2, yshift=0.125cm] (np2) {\Large $1$};
+         \node[const, above=of p3, yshift=0.125cm] (np3) {\Large $0$};
+         }
+}
+\end{textblock}
+}
+
+\only<3>{
+\begin{textblock}{160}(0,28)
+ \scalebox{1.1}{
+\tikz{ %
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+
+         \node[const, above=of p1, yshift=-0.05cm] (np1) {\Large $1/10$};
+         \node[const, above=of p2, yshift=-0.05cm] (np2) {\Large $8/10$};
+         \node[const, above=of p3, yshift=-0.05cm] (np3) {\Large $1/10$};
+         }
+}
+\end{textblock}
+}
+
+
+\only<4-5>{
+\begin{textblock}{160}(0,28)
+ \scalebox{1.1}{
+\tikz{ %
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+
+         \node[const, above=of p1, yshift=-0.05cm] (np1) {\Large $1/3$};
+         \node[const, above=of p2, yshift=-0.05cm] (np2) {\Large $1/3$};
+         \node[const, above=of p3, yshift=-0.05cm] (np3) {\Large $1/3$};
+         }
+}
+\end{textblock}
+}
+
+\only<5>{
+\begin{textblock}{150}(10,64)   \centering \Large
+Acuerdo intersubjetivo (no mentir)\\[0.1cm]
+\large 1. \textbf{Maximizar incertidumbre} (dividiendo en partes iguales) \\
+\large 2. \textbf{Dada la información disponible} (no asignamos creencia por fuera de las cajas)
+
+\end{textblock}
+}
+
+\only<6->{
+\begin{textblock}{160}(0,28)
+ \scalebox{1.1}{
+\tikz{ %
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.03\textwidth]{../auxiliar/download/dedo.png}} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+
+         \node[const, above=of p1, yshift=-0.05cm] (np1) {\Large $\phantom{/}?\phantom{/}$};
+         \node[const, above=of p2, yshift=-0.05cm] (np2) {\Large $\phantom{/}0\phantom{/}$};
+         \node[const, above=of p3, yshift=-0.05cm] (np3) {\Large $\phantom{/}?\phantom{/}$};
+         }
+}
+\end{textblock}
+}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+ \centering \LARGE Modelos causales \\
+\end{textblock}
+\vspace{1cm}
+
+
+\begin{textblock}{160}(8,22)
+%\onslide<2->{Modelo gráfico} \\ \vspace{0.3cm}
+ \tikz{
+    \node[latent,] (r) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,above=of r, xshift=-0.2cm, yshift=0.3cm] (titulo) {\Large Modelo gráfico} ;
+    \node[const,left=of r] (nr) {Regalo: \Large $r$\,} ;
+
+    \onslide<2->{
+    \node[latent, below=of r] (d) {\includegraphics[width=0.05\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const, left=of d] (nd) {Pista: \Large $s$\,} ;
+    \node[const, below=of d, yshift=-0.2cm] (c) {$(s \neq r)$};
+
+    \edge {r} {d};
+    }
+}
+\end{textblock}
+
+\only<1-2>{
+\begin{textblock}{160}(65,33)
+\scalebox{1.5}{
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {} ;
+    \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+    \node[const, above=of p1, yshift=.15cm] (fp1) {$1/3$};
+    \node[const, above=of p2, yshift=.15cm] (fp2) {$1/3$};
+    \node[const, above=of p3, yshift=.15cm] (fp3) {$1/3$};
+    \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+    \node[invisible, xshift=4.75cm] (s-dist) {};
+    \node[invisible, yshift=-1cm] (s-dist) {};
+    \node[invisible, yshift=1.2cm] (s-dist) {};
+    }
+}
+\end{textblock}
+}
+
+\only<3>{
+\begin{textblock}{160}(65,33)
+\scalebox{1.5}{
+\tikz{ %
+
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.03\textwidth]{../auxiliar/download/dedo.png}} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+%
+%
+         \node[const, above=of p1, yshift=.15cm] (fp1) {$?$};
+         \node[const, above=of p2, yshift=.15cm] (fp2) {$0$};
+         \node[const, above=of p3, yshift=.15cm] (fp3) {$?$};
+         \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+%         \node[const, above=of p2, xshift=.8cm, yshift=.15cm] (fp3) {$66\%$};
+%
+         \node[invisible, xshift=4.75cm] (s-dist) {};
+         \node[invisible, yshift=-1cm] (s-dist) {};
+         \node[invisible, yshift=1.2cm] (s-dist) {};
+%
+%         \plate[color=red] {no} {(p1)} {}; %
+%         \plate {si} {(p2)(p3)} {}; %
+
+        }
+}
+\end{textblock}
+}
+
+\end{frame}
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+ \centering \LARGE Modelos causales\\
+ \Large Máxima incertidumbre dado el modelo \\
+\end{textblock}
+\vspace{1cm}
+\vspace{1cm}
+
+
+\only<1-3>{
+\begin{textblock}{160}(8,22)
+%\onslide<2->{Modelo gráfico} \\ \vspace{0.3cm}
+ \tikz{
+    \node[latent,] (r) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,above=of r, xshift=-0.2cm, yshift=0.3cm] (titulo) {\Large {Modelo gráfico}} ;
+    \node[const,left=of r] (nr) {Regalo: \Large $r$\,} ;
+
+    \node[latent, below=of r] (d) {\includegraphics[width=0.05\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const, left=of d] (nd) {Pista: \Large $s$\,} ;
+    \node[const, below=of d, yshift=-0.2cm] (c) {$(s \neq r)$};
+
+    \edge {r} {d};
+
+}
+\end{textblock}
+}
+
+
+\only<1->{
+\begin{textblock}{80}(60,20) \centering
+\scalebox{1.1}{
+\tikz{
+\onslide<1->{
+\node[latent, draw=white, yshift=0.6cm] (b0) {$ 1$};
+
+\node[latent,below=of b0,yshift=0.6cm, xshift=-3cm] (r1) {$r_1$};
+\node[latent,below=of b0,yshift=0.6cm] (r2) {$r_2$};
+\node[latent,below=of b0,yshift=0.6cm, xshift=3cm] (r3) {$r_3$};
+
+\node[latent, below=of r1, draw=white, yshift=0.6cm] (br1) {$\frac{1}{3}$};
+\node[latent, below=of r2, draw=white, yshift=0.6cm] (br2) {$\frac{1}{3}$};
+\node[latent, below=of r3, draw=white, yshift=0.6cm] (br3) {$\frac{1}{3}$};
+}
+\onslide<2->{
+\node[latent,below=of br1,yshift=0.6cm, xshift=-0.7cm] (r1d2) {$s_2$};
+\node[latent,below=of br1,yshift=0.6cm, xshift=0.7cm] (r1d3) {$s_3$};
+
+\node[latent,below=of r1d2,yshift=0.6cm,draw=white] (br1d2) {$\frac{1}{3}\frac{1}{2}$};
+\node[latent,below=of r1d3,yshift=0.6cm, draw=white] (br1d3) {$\frac{1}{3}\frac{1}{2}$};
+}
+\onslide<3->{
+\node[latent,below=of br2,yshift=0.6cm, xshift=-0.7cm] (r2d1) {$s_1$};
+\node[latent,below=of br2,yshift=0.6cm, xshift=0.7cm] (r2d3) {$s_3$};
+\node[latent,below=of br3,yshift=0.6cm, xshift=-0.7cm] (r3d1) {$s_1$};
+\node[latent,below=of br3,yshift=0.6cm, xshift=0.7cm] (r3d2) {$s_2$};
+
+\node[latent,below=of r2d1,yshift=0.6cm, draw=white] (br2d1) {$\frac{1}{3}\frac{1}{2}$};
+\node[latent,below=of r2d3,yshift=0.6cm,draw=white] (br2d3) {$\frac{1}{3}\frac{1}{2}$};
+\node[latent,below=of r3d1,yshift=0.6cm, draw=white] (br3d1) {$\frac{1}{3}\frac{1}{2}$};
+\node[latent,below=of r3d2,yshift=0.6cm,draw=white] (br3d2) {$\frac{1}{3}\frac{1}{2}$};
+}
+\onslide<1->{
+\edge[-] {b0} {r1,r2,r3};
+\edge[-] {r1} {br1};
+\edge[-] {r2} {br2};
+\edge[-] {r3} {br3};
+}
+\onslide<2->{
+\edge[-] {br1} {r1d2,r1d3};
+\edge[-] {r1d2} {br1d2};
+\edge[-] {r1d3} {br1d3};
+}
+\onslide<3->{
+\edge[-] {br2} {r2d1, r2d3};
+\edge[-] {br3} {r3d1,r3d2};
+\edge[-] {r2d1} {br2d1};
+\edge[-] {r2d3} {br2d3};
+\edge[-] {r3d1} {br3d1};
+\edge[-] {r3d2} {br3d2};
+}
+}
+}
+\end{textblock}
+}
+
+
+\only<4->{
+ \begin{textblock}{65}(0,24)
+  \centering
+  Creencia$(r,s|\text{Modelo})$ \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+        & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \\ \hline
+  $s_1$  & \onslide<5->{$0$} & \onslide<6->{$1/6$} & \onslide<6->{$1/6$} & \\ \hline
+  $s_2$  & \onslide<7->{$1/6$} & \onslide<7->{$0$} & \onslide<7->{$1/6$} &  \\ \hline
+       $s_3$ & \onslide<8->{$1/6$} & \onslide<8->{$1/6$} & \onslide<8->{$0$} &  \\ \hline \hline
+              & & &  & \\
+\end{tabular}
+\end{textblock}
+}
+
+
+
+\only<9->{
+ \begin{textblock}{60}(0,65) \centering
+Creencia conjunta\\
+
+intersubjetiva inicial
+ \end{textblock}
+ }
+\end{frame}
+
+
+
+\begin{frame}[plain]
+ \begin{textblock}{160}(0,3)
+ \centering \Large\hspace{1.4cm}Máxima incertidumbre dado el modelo \only<1-5>{\phantom}{y el dato}
+ \end{textblock}
+
+\vspace{1cm}
+
+ \begin{textblock}{160}(0,15)
+  \centering
+  $\overbrace{\text{Creencia}(r,s|\text{M})}^{\text{\scriptsize De ambas variables}}$ \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+     $\phantom{\bm{s_2}}$   & \, $r_1$ \, &  \, $\only<2>{\gray}r_2$ \, & \, $\only<2>{\gray}r_3$ \, &  \phantom{\bm{$1/3$}} \\ \hline
+  $\only<5>{\gray}s_1$ & $\only<5>{\gray}0$ & $\only<2,5>{\gray}1/6$ & $\only<2,5>{\gray}1/6$ & \onslide<4->{$\only<5>{\gray}1/3$} \\ \hline
+  $\only<5>{\bm}{s_2}$ & $1/6$ & $\only<2>{\gray}0$ & $\only<2>{\gray}1/6$ & \onslide<4->{$1/3$} \\ \hline
+  $\only<5>{\gray}s_3$ & $\only<5>{\gray}1/6$ & $\only<2,5>{\gray}1/6$ & $\only<2,5>{\gray}0$ & \onslide<4->{$\only<5>{\gray}1/3$} \\ \hline \hline
+        & \onslide<3->{$\only<5>{\gray}1/3$} & \onslide<3->{$\only<5>{\gray}1/3$} & \onslide<3->{$\only<5>{\gray}1/3$} &  \\
+\end{tabular}
+
+\vspace{0.3cm}
+
+\onslide<2->{
+\begin{align*}
+ \text{Creencia}(r|\text{M}) = \onslide<3->{\sum_s \text{Creencia}(r,s|\text{M})}
+\end{align*}
+}
+\vspace{-0.5cm}
+\onslide<4->{
+\begin{align*}
+ \text{Creencia}(s|\text{M}) = \sum_r \text{Creencia}(r,s|\text{M})
+\end{align*}
+}
+\end{textblock}
+
+\end{frame}
+
+
+\begin{frame}[plain]
+ \begin{textblock}{160}(0,3)
+ \centering \Large\hspace{1.4cm}Máxima incertidumbre dado el modelo y el dato
+ \end{textblock}
+
+\vspace{1cm}
+
+\only<1->{
+ \begin{textblock}{160}(0,15)
+  \centering
+  \only<1-2>{$\overbrace{\text{Creencia}(r,s_2|\text{M})}^{\text{\scriptsize De ambas variables}}$}\only<3->{$\overbrace{\text{Creencia}(r|s_2,\text{M})}^{\text{\scriptsize De ambas variables}}$} \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+        $\phantom{\bm{s_2}}$ & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, &  \phantom{\bm{$1/3$}} \\ \hline
+  &  &  &  & \\ \hline
+  $\bm{s_2}$ & \only<1-2>{$1/6$}\only<3>{$\frac{1}{6}/\frac{1}{3}$}\only<4->{$1/2$} & $0$ & \only<1-2>{$1/6$}\only<3>{$\frac{1}{6}/\frac{1}{3}$}\only<4->{$1/2$} & \only<1>{$1/3$}\only<2>{{$\bm{1/3}$}}\only<3>{$\frac{1}{3}/\frac{1}{3}$}\only<4->{$1$} \\ \hline
+  &  &  & &  \\
+\end{tabular}
+\end{textblock}
+}
+
+\only<1>{
+\begin{textblock}{160}(0,58)
+\begin{equation*}
+\ \phantom{\underbrace{\text{Creencia}(r|s_2,\text{M})}_{\text{Nueva creencia}} =} \hfrac{\overbrace{\text{Creencia}(r, s_2|\text{M})}^{\text{Creencia compatible}}}{\phantom{\underbrace{\text{Creencia}(s_2|\text{M})}_{\text{Creencia total que compatible}}}}
+\end{equation*}
+\end{textblock}
+}
+
+\only<2>{
+\begin{textblock}{160}(0,58)
+\begin{equation*}
+\ \phantom{\underbrace{\text{Creencia}(r|s_2,\text{M})}_{\text{Nueva creencia}} =}\hfrac{\overbrace{\text{Creencia}(r, s_2|\text{M})}^{\text{Creencia compatible}}}{\underbrace{\text{Creencia}(s_2|\text{M})}_{\text{Creencia total que compatible}}}
+\end{equation*}
+\end{textblock}
+}
+
+
+\only<3-4>{
+\begin{textblock}{160}(0,58)
+\begin{equation*}
+\underbrace{\text{Creencia}(r|s_2,\text{M})}_{\text{Nueva creencia}} = \frac{\overbrace{\text{Creencia}(r, s_2|\text{M})}^{\text{Creencia compatible}}}{\underbrace{\text{Creencia}(s_2|\text{M})}_{\text{Creencia total que compatible}}}
+\end{equation*}
+\end{textblock}
+}
+
+
+\only<5->{
+\begin{textblock}{160}(7,57)
+\centering
+\scalebox{1.2}{
+\tikz{ %
+
+         \node[factor, minimum size=1cm] (p1) {} ;
+         \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.03\textwidth]{../auxiliar/download/dedo.png}} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+         \node[const, above=of p1, yshift=.15cm] (fp1) {$1/2$};
+         \node[const, above=of p2, yshift=.15cm] (fp2) {$0$};
+         \node[const, above=of p3, yshift=.15cm] (fp3) {$1/2$};
+         \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+         \node[invisible, xshift=4.75cm] (s-dist) {};
+         \node[invisible, yshift=-1cm] (s-dist) {};
+         \node[invisible, yshift=1.2cm] (s-dist) {};
+
+        }
+}
+\end{textblock}
+}
+
+\end{frame}
+
+{
+\setbeamercolor{background canvas}{bg=orange!20}
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Las reglas de la probabilidad
+\end{textblock}
+\onslide<1>{
+\vspace{1cm}
+
+
+
+\begin{columns}[t]
+\begin{column}{0.5\textwidth}
+ \centering
+
+
+\centering
+ \textbf{\large Principio de coherencia}
+
+(regla del producto)
+
+\begin{equation*}
+ P(\text{Hipótesis}|\text{Dato})  = \frac{P(\text{Hipótesis},\text{Dato})}{P(\text{Dato})}
+\end{equation*}
+
+\vspace{0.1cm}
+
+\small
+Preservamos la creencia previa que \\
+sigue siendo compatible con el dato
+
+
+ \end{column}
+ \begin{column}{0.5\textwidth}
+ \centering
+
+ \textbf{\large Principio de integridad}
+
+(regla de la suma)
+
+\begin{equation*}
+ P(\text{Dato}) = \sum_{\text{\tiny Hipótesis}} P(\text{Hipótesis},\text{Dato})
+\end{equation*}
+
+\vspace{0.15cm}
+
+ \small
+Predecimos con la contribución de todas las \\
+hipótesis. No perdemos ni creamos creencia.
+
+\end{column}
+\end{columns}
+}
+\end{frame}
+}
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Regla del producto
+\end{textblock}
+
+\begin{textblock}{180}(-10,28)
+ \begin{align*}
+ \phantom{\frac{P(\text{R})}{P\text{R})}P(H_1)}P(\,\,H_1\,\,|\,\,H_2\,\,) & = \frac{P(H_1, H_2)}{P(H_2)} \phantom{-----------} \\[0.4cm]
+ \only<2-3>{\phantom{\frac{P(\text{R})}{P\text{R})}}P(\,\,H_2\,\,|\,\,H_1\,\,) & = }  \only<3>{\frac{P(H_1, H_2)}{P(H_1)}\phantom{\frac{P(\text{R})}{P\text{R})}}}
+ \only<4>{\phantom{\frac{P(\text{R})}{P\text{R})}}P(H_1)P(\,\,H_2\,\,|\,\,H_1\,\,) & =   {P(H_1, H_2)}\phantom{\frac{P(\text{R})}{P\text{R})}} }
+ \only<5>{\phantom{\frac{P(\text{R})}{P\text{R})}}P(H_1)P(\,\,H_2\,\,|\,\,H_1\,\,) & =   \bm{P(H_1, H_2)}\phantom{\frac{P(\text{R})}{P\text{R})}} }
+ \end{align*}
+\end{textblock}
+
+\end{frame}
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Regla del producto \\
+\Large Teorema de Bayes \\
+\end{textblock}
+
+\only<1>{
+\begin{textblock}{160}(0,26)
+\begin{equation*}
+\overbrace{P(\text{Hip\'otesis}_i,\,\text{Datos})}^{\text{\small Creencia que sobrevive}} = \overbrace{P(\text{Datos}\,|\,\text{Hip\'otesis}_i)}^{\text{\small Predicción (verosimilitud) }} \overbrace{P(\text{Hip\'otesis}_i)}^{\text{\small Creencia previa}}
+\end{equation*}
+\end{textblock}
+}
+
+\only<2>{
+\begin{textblock}{130}(30,23)
+\begin{flalign*}
+& \underbrace{P(\text{Hip\'otesis}_i|\,\text{Datos})}_{\text{\small Posterior}} = \frac{\overbrace{P(\text{Hip\'otesis}_i,\, \text{Datos})}^{\text{\small Creencia que sobrevive}} }{\underbrace{P(\text{Datos})}_{\text{\small Evidencia}}} &&
+\end{flalign*}
+\end{textblock}
+}
+
+
+\only<3>{
+\begin{textblock}{130}(30,23)
+\begin{flalign*}
+& \underbrace{P(\text{Hip\'otesis}_i|\,\text{Datos})}_{\text{\small Posterior}} = \frac{\overbrace{P(\text{Dato}\,|\,\text{Hip\'otesis}_i)}^{\text{\small Verosimilitud}} \overbrace{P(\text{Hip\'otesis}_i)}^{\text{\small Prior}} }{\underbrace{P(\text{Dato})}_{\text{\small Evidencia}}} &&
+\end{flalign*}
+\end{textblock}
+}
+
+\vspace{0.2cm}
+
+\only<4->{
+%\vspace{0.3cm}
+\Wider[2cm]{
+\begin{textblock}{160}(0,23)
+\begin{equation*}
+\underbrace{P(\text{Hip\'otesis}_i|\,\text{Datos, Modelo})}_{\text{\small Posterior}} = \frac{\overbrace{P(\text{Datos}\,|\,\text{Hip\'otesis$_i$, Modelo})}^{\text{\small Verosimilitud}} \overbrace{P(\text{Hip\'otesis}_i|\text{ Modelo})}^{\text{\small Prior}} }{\underbrace{P(\text{Datos }|\text{ Modelo})}_{\text{\small Evidencia}}}
+\end{equation*}
+\end{textblock}
+}
+}
+
+\only<4>{
+\begin{textblock}{100}(30,65)
+\centering \vspace{0.05cm}
+\Large Y el \textbf{modelo}!
+
+\large que relaciona el \textbf{dato} con la \textbf{hipótesis}!
+\vspace{0.1cm}
+\end{textblock}
+}
+
+
+\only<5-7>{
+\begin{textblock}{140}(10,58)
+\begin{flalign*}
+\only<5>{\overbrace{P(\text{Datos}\,|\,\text{Modelo})}^{\text{\small Evidencia}} = \ ? }
+\only<6>{\overbrace{P(\text{Datos}\,|\,\text{Modelo})}^{\text{\small Evidencia}} = \ \text{\Large \ Regla de la suma} }
+\only<7>{\overbrace{P(\text{Datos}\,|\,\text{Modelo} )}^{\text{\small Evidencia}} = }
+\only<7>{\sum_{\text{Hipótesis}_i} P(\underbrace{\text{Hip\'otesis$_i$},\,\text{Dato}}_{\hfrac{\text{\small Creencia}}
+{\text{\small conjunta}}} \, | \, \text{Modelo})}
+&&
+\end{flalign*}
+\end{textblock}
+}
+
+
+\only<8->{
+\begin{textblock}{160}(0,60)
+\begin{equation*}
+ P(\text{Modelo}_j|\text{Datos}) = \onslide<9>{\frac{\overbrace{P(\text{Datos}|\text{Modelo}_j)}^{\text{\small Evidencia}} P(\text{Modelo}_j)}{ P(\text{Datos})}}
+\end{equation*}
+\end{textblock}
+}
+
+
+\end{frame}
+
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+ \centering \LARGE Modelo causal alternativo
+ \end{textblock}
+ \vspace{-1cm}
+
+ \begin{textblock}{80}(0,24)
+ \centering
+
+ \large Modelo gráfico:
+
+ \vspace{0.3cm}
+
+ \tikz{
+    \only<-2>{\phantom}{\node[latent] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;}
+    \only<-2>{\phantom}{\node[const,above=of d] (nd) {\Large $s$} ;}
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,below=of r] (nr) {\Large $r$} ;
+    \only<-1>{\phantom}{\node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;}
+    \only<-1>{\phantom}{\node[const,below=of c] (nc) {\, \Large $c = 1$} ;}
+    \only<-2>{\phantom}{\edge {r,c} {d};}
+
+    \only<-2>{\phantom}{\node[const,below=of d] (modelo) {\large $s \neq r$ \, $s \neq c$} ;}
+}
+ \end{textblock}
+
+
+\only<1>{
+ \begin{textblock}{160}(80,33)
+\scalebox{1.5}{
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {} ;
+    \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+    \node[const, above=of p1, yshift=.15cm] (fp1) {$1/3$};
+    \node[const, above=of p2, yshift=.15cm] (fp2) {$1/3$};
+    \node[const, above=of p3, yshift=.15cm] (fp3) {$1/3$};
+    \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+    \node[invisible, xshift=4.75cm] (s-dist) {};
+    \node[invisible, yshift=-1cm] (s-dist) {};
+    \node[invisible, yshift=1.2cm] (s-dist) {};
+    }
+}
+\end{textblock}
+}
+
+\only<2>{
+ \begin{textblock}{160}(80,33)
+\scalebox{1.5}{
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.025\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+    \node[const, above=of p1, yshift=.15cm] (fp1) {$1/3$};
+    \node[const, above=of p2, yshift=.15cm] (fp2) {$1/3$};
+    \node[const, above=of p3, yshift=.15cm] (fp3) {$1/3$};
+    \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+    \node[invisible, xshift=4.75cm] (s-dist) {};
+    \node[invisible, yshift=-1cm] (s-dist) {};
+    \node[invisible, yshift=1.2cm] (s-dist) {};
+    }
+}
+\end{textblock}
+}
+
+
+\only<3>{
+ \begin{textblock}{160}(80,33)
+\scalebox{1.5}{
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.025\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.03\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+    \node[const, above=of p1, yshift=.15cm] (fp1) {$\phantom{/}?\phantom{/}$};
+    \node[const, above=of p2, yshift=.15cm] (fp2) {$\phantom{/}0\phantom{/}$};
+    \node[const, above=of p3, yshift=.15cm] (fp3) {$\phantom{/}?\phantom{/}$};
+    \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+    \node[invisible, xshift=4.75cm] (s-dist) {};
+    \node[invisible, yshift=-1cm] (s-dist) {};
+    \node[invisible, yshift=1.2cm] (s-dist) {};
+    }
+}
+\end{textblock}
+}
+
+\end{frame}
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+ \centering \LARGE Modelo causal alternativo \\
+ \Large \phantom{y el dato} Incertidumbre óptima dado el modelo \only<1-12>{\phantom}{y el dato}
+ \end{textblock}
+ \vspace{-1cm}
+
+ \only<1-3>{
+ \begin{textblock}{80}(0,24)
+ \centering
+
+ \large Modelo gráfico:
+
+ \vspace{0.3cm}
+
+ \tikz{
+    {\node[latent] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;}
+    {\node[const,above=of d] (nd) {\Large $s$} ;}
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,below=of r] (nr) {\Large $r$} ;
+    {\node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;}
+    {\node[const,below=of c] (nc) {\, \Large $c = 1$} ;}
+    {\edge {r,c} {d};}
+
+    {\node[const,below=of d] (modelo) {\large $s \neq r$ \, $s \neq c$} ;}
+}
+ \end{textblock}
+}
+
+  \only<4-12>{
+ \begin{textblock}{80}(0,26)
+  \centering
+  $P(r,s)$ \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+        & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \\ \hline
+  { $s_2$}  & \onslide<5->{$1/6$} & \onslide<7->{$0$} & \onslide<9->{$1/3$} & \onslide<12->{$1/2$} \\ \hline
+       {$s_3$} & \onslide<6->{$1/6$} & \onslide<8->{$1/3$} & \onslide<10->{$0$} & \onslide<12->{$1/2$} \\ \hline
+              & \onslide<12->{$1/3$} &  \onslide<12->{$1/3$} & \onslide<12->{$1/3$}  & \onslide<12->{$1$} \\
+\end{tabular}
+\end{textblock}
+}
+
+\only<13>{
+ \begin{textblock}{80}(0,26)
+  \centering
+  $P(r,s_2)$ \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+        & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \\ \hline
+        { $s_2$}  & \onslide<6->{$1/6$} & \onslide<8->{$0$} & \onslide<10->{$1/3$} & \onslide<13->{$1/2$} \\ \hline
+\end{tabular}
+\end{textblock}
+}
+
+
+\only<14->{
+ \begin{textblock}{80}(0,26)
+  \centering
+  $P(r|s_2)$ \\ \vspace{0.3cm}
+ \begin{tabular}{c|c|c|c||c} \setlength\tabcolsep{0.4cm}
+        & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$1/2$}\\ \hline
+  { $s_2$}  & \onslide<6->{$1/3$} & \onslide<8->{$0$} & \onslide<10->{$2/3$} & \onslide<13->{$1$} \\ \hline
+\end{tabular}
+\end{textblock}
+}
+
+
+\only<11-12>{
+\begin{textblock}{80}(0,58)
+ \centering
+\begin{center}
+ Regla de la suma
+ \end{center}
+
+ $P(s_i) = \sum_{j} P(r_j,s_i)$
+ \\
+
+\end{textblock}
+}
+
+\only<13-14>{
+\begin{textblock}{80}(0,58)
+ \centering
+\begin{center}
+ Regla del producto
+ \end{center}
+ \begin{equation*}
+P(r_i|s_2) = \frac{P(r_i,s_2)}{P(s_2)}
+ \end{equation*}
+
+\end{textblock}
+}
+
+
+\only<15>{
+\begin{textblock}{70}(10,55)
+\centering
+ \scalebox{1}{
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+    \node[const, above=of p1, yshift=.15cm] (fp1) {$1/3$};
+    \node[const, above=of p2, yshift=.15cm] (fp2) {$\phantom{/}0\phantom{/}$};
+    \node[const, above=of p3, yshift=.15cm] (fp3) {$2/3$};
+    \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+    \node[invisible, xshift=4.75cm] (s-dist) {};
+    \node[invisible, yshift=-1cm] (s-dist) {};
+    \node[invisible, yshift=1.2cm] (s-dist) {};
+    }
+}
+\end{textblock}
+}
+
+ \only<2-12>{
+\begin{textblock}{80}(70,20) \centering
+\scalebox{1.2}{
+ \tikz{
+ \onslide<2->{
+\node[latent, draw=white, yshift=0.8cm] (b0) {$1$};
+\node[latent,below=of b0,yshift=0.8cm, xshift=-2cm] (r1) {$r_1$};
+{\node[latent,below=of b0,yshift=0.8cm] (r2) {$r_2$}; }
+\node[latent,below=of b0,yshift=0.8cm, xshift=2cm] (r3) {$r_3$};
+\node[latent, below=of r1, draw=white, yshift=0.7cm] (bc11) {$\frac{1}{3}$};
+{\node[latent, below=of r2, draw=white, yshift=0.7cm] (bc12) {$\frac{1}{3}$};}
+\node[latent, below=of r3, draw=white, yshift=0.7cm] (bc13) {$\frac{1}{3}$};
+}
+\onslide<3->{
+\node[latent,below=of bc11,yshift=0.7cm, xshift=-0.5cm] (r1d2) {$s_2$};
+{\node[latent,below=of bc11,yshift=0.7cm, xshift=0.5cm] (r1d3) {$s_3$};}
+{\node[latent,below=of bc12,yshift=0.7cm] (r2d3) {$s_3$};}
+\node[latent,below=of bc13,yshift=0.7cm] (r3d2) {$s_2$};
+\node[latent,below=of r1d2,yshift=0.7cm,draw=white] (br1d2) {$\only<5>{\bm}{\frac{1}{3}\frac{1}{2}}$};
+{\node[latent,below=of r1d3,yshift=0.7cm, draw=white] (br1d3) {$\only<6>{\bm}{\frac{1}{3}\frac{1}{2}}$};}
+{\node[latent,below=of r2d3,yshift=0.7cm,draw=white] (br2d3) {$\only<8>{\bm}{\frac{1}{3}}$};}
+\node[latent,below=of r3d2,yshift=0.7cm,draw=white] (br3d2) {$\only<9>{\bm}{\frac{1}{3}}$};
+}
+
+\node[invisible, left=of r1d2,xshift=-0.1cm] (il) {};
+\node[invisible, right=of br3d2,xshift=0.1cm] (il) {};
+
+\onslide<2->{
+\edge[-] {b0} {r1,r2,r3};
+\edge[-] {r1} {bc11};
+\edge[-] {r2} {bc12};
+\edge[-] {r3} {bc13};
+}
+\onslide<3->{
+\edge[-] {bc11} {r1d2,r1d3};
+\edge[-] {bc12} {r2d3};
+\edge[-] {bc13} {r3d2};
+\edge[-] {r1d2} {br1d2};
+\edge[-] {r1d3} {br1d3};
+\edge[-] {r2d3} {br2d3};
+\edge[-] {r3d2} {br3d2};
+}
+}
+}
+\end{textblock}
+}
+
+
+\only<13->{
+\begin{textblock}{80}(70,20) \centering
+\scalebox{1.2}{
+ \tikz{
+\node[latent, draw=white, yshift=0.8cm] (b0) {$1$};
+\node[latent,below=of b0,yshift=0.8cm, xshift=-2cm] (r1) {$r_1$};
+{\color{gray}\node[latent,draw=gray,below=of b0,yshift=0.8cm] (r2) {$r_2$}; }
+\node[latent,below=of b0,yshift=0.8cm, xshift=2cm] (r3) {$r_3$};
+
+% \node[latent, below=of r1, draw=white, yshift=0.8cm] (br1) {$\frac{1}{3}$};
+% \node[latent, below=of r2, draw=white, yshift=0.8cm] (br2) {$\frac{1}{3}$};
+% \node[latent, below=of r3, draw=white, yshift=0.8cm] (br3) {$\frac{1}{3}$};
+% \node[latent,below=of br1,yshift=0.8cm] (c11) {$c_1$};
+% \node[latent,below=of br2,yshift=0.8cm] (c12) {$c_1$};
+% \node[latent,below=of br3,yshift=0.8cm] (c13) {$c_1$};
+
+\node[latent, below=of r1, draw=white, yshift=0.7cm] (bc11) {$\frac{1}{3}$};
+{\color{gray}\node[latent, below=of r2, draw=white, yshift=0.7cm] (bc12) {$\frac{1}{3}$};}
+\node[latent, below=of r3, draw=white, yshift=0.7cm] (bc13) {$\frac{1}{3}$};
+\node[latent,below=of bc11,yshift=0.7cm, xshift=-0.5cm] (r1d2) {$s_2$};
+{\color{gray}\node[latent,draw=gray,below=of bc11,yshift=0.7cm, xshift=0.5cm] (r1d3) {$s_3$};}
+{\color{gray}\node[latent, draw=gray,below=of bc12,yshift=0.7cm] (r2d3) {$s_3$};}
+\node[latent,below=of bc13,yshift=0.7cm] (r3d2) {$s_2$};
+
+\node[latent,below=of r1d2,yshift=0.7cm,draw=white] (br1d2) {$\frac{1}{3}\frac{1}{2}$};
+{\color{gray}\node[latent,below=of r1d3,yshift=0.7cm, draw=white] (br1d3) {$\frac{1}{3}\frac{1}{2}$};}
+{\color{gray}\node[latent,below=of r2d3,yshift=0.7cm,draw=white] (br2d3) {$\frac{1}{3}$};}
+\node[latent,below=of r3d2,yshift=0.7cm,draw=white] (br3d2) {$\frac{1}{3}$};
+\edge[-] {b0} {r1,r3};
+\edge[-,draw=gray] {b0} {r2};
+% \edge[-] {r1} {br1};
+% \edge[-] {r2} {br2};
+% \edge[-] {r3} {br3};
+% \edge[-] {br1} {c11};
+% \edge[-] {br2} {c12};
+% \edge[-] {br3} {c13};
+\edge[-] {r1} {bc11};
+\edge[-,draw=gray] {r2} {bc12};
+\edge[-] {r3} {bc13};
+\edge[-] {bc11} {r1d2};
+\edge[-,draw=gray] {bc11} {r1d3};
+\edge[-,draw=gray] {bc12} {r2d3};
+\edge[-] {bc13} {r3d2};
+\edge[-] {r1d2} {br1d2};
+\edge[-,draw=gray] {r1d3} {br1d3};
+\edge[-,draw=gray] {r2d3} {br2d3};
+\edge[-] {r3d2} {br3d2};
+}
+}
+\end{textblock}
+}
+
+\end{frame}
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Modelos causales alternativos
+\end{textblock}
+ \vspace{1.25cm}
+
+\begin{textblock}{80}(0,16)
+\centering
+\tikz{
+    \node[invisible] (id) {};
+    \node[latent, left=of id, xshift=-1.5cm] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d] (nd) {\Large $P(s_{_{\only<-2>{\phantom}{t}}}|r_{_{\only<-2>{\phantom}{t}}})$} ;
+    \node[const, right=of d, yshift=0cm] (restricciones) {$s \neq r$};
+
+
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $P(r_{_{\only<-2>{\phantom}{t}}})$} ;
+
+
+    \node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c] (nc) {\Large $P(c_{_{\only<-2>{\phantom}{t}}})$} ;
+
+    \edge {r} {d};
+
+    \node[invisible, right=of c, xshift=0.6cm, yshift=0.65cm] (ic) {};
+
+    \onslide<3->{\plate {episodio} {(d)(ic)(nr)} {$t$ : Episodio};}
+}
+
+\vspace{0.5cm}
+\only<-1>{
+\tikz{
+         \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+         \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/dedo.png}} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+         \node[const, above=of p1, yshift=.1cm] (fp1) {$1/2$};
+         \node[const, above=of p2, yshift=.1cm] (fp2) {$\phantom{/}0\phantom{/}$};
+         \node[const, above=of p3, yshift=.1cm] (fp3) {$1/2$};
+         \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+        }
+}
+\end{textblock}
+
+
+
+\begin{textblock}{80}(80,16)
+\centering
+\tikz{
+    \node[invisible] (id) {};
+    \node[latent, left=of id, xshift=-1.5cm] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d] (nd) {\Large $P(s_{_{\only<-2>{\phantom}{t}}}|r_{_{\only<-2>{\phantom}{t}}},c_{_{\only<-2>{\phantom}{t}}})$} ;
+    \node[const, right=of d, yshift=-0cm] (restricciones) {$s \neq r \text{, } s \neq c$};
+
+
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $P(r_{_{\only<-2>{\phantom}{t}}})$} ;
+
+
+    \node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c] (nc) {\Large $P(c_{_{\only<-2>{\phantom}{t}}})$} ;
+
+    \node[invisible, right=of c, xshift=0.6cm, yshift=0.65cm] (ic) {};
+
+    \edge {r,c} {d};
+    \onslide<3->{\plate {episodio} {(d)(ic)(nr)} {$t$ : Episodio};}
+}
+
+\vspace{0.5cm}
+ \only<-1>{
+\tikz{
+         \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+         \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/dedo.png}} ;
+         \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+
+         \node[const, above=of p1, yshift=.1cm] (fp1) {$1/3$};
+         \node[const, above=of p2, yshift=.1cm] (fp2) {$\phantom{/}0\phantom{/}$};
+         \node[const, above=of p3, yshift=.1cm] (fp3) {$2/3$};
+         \node[const, below=of p2, yshift=-.10cm, xshift=0.3cm] (dedo) {};
+
+        }
+}
+\end{textblock}
+
+
+\only<2->{
+\begin{textblock}{160}(0,70)
+\centering \Large ¿Y el acuerdo intersubjetivo respecto de los modelos?  \\[0.2cm] \large
+$P(\text{Modelo}_i|\text{Datos} = \{\underbrace{(c_0, s_0, r_0)}_{\text{Episodio 0}}, \underbrace{(c_1, s_1, r_1)}_{\text{Episodio 1}},  \dots \})$
+
+\end{textblock}
+}
+
+
+
+\end{frame}
+
+
+
+\begin{frame}[plain,fragile]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Evaluación de modelos causales
+\end{textblock}
+\vspace{1cm}
+
+\only<-5>{
+\begin{textblock}{160}(0,18)
+\begin{equation*}
+ P(\text{Modelo}_i|\text{Datos}) = \frac{\overbrace{P(\text{Datos}|\text{Modelo}_i)}^{\text{\small Evidencia} } P(\text{Modelo}_i)}{ P(\text{Datos})}
+\end{equation*}
+\end{textblock}
+}
+%
+% \only<2>{
+% \begin{textblock}{160}(0,44)
+% \begin{equation*}
+% P(\text{Hip\'otesis}_i|\,\text{Datos, Modelo}) = \frac{P(\text{Datos}\,|\,\text{Hip\'otesis$_i$, Modelo}) P(\text{Hip\'otesis}_i|\text{ Modelo})} {\underbrace{P(\text{Datos }|\text{ Modelo})}_{\hfrac{\text{\footnotesize Predicción a priori}}{\text{\footnotesize o evidencia}}} }
+% \end{equation*}
+% \end{textblock}
+% }
+%
+
+%
+% \only<3-4>{
+% \begin{textblock}{160}(0,42)
+%  \begin{equation*}
+% \begin{split}
+%  \frac{P(\text{Modelo}_A|\text{Datos})}{P(\text{Modelo}_B|\text{Datos})} = \frac{P(\text{Datos}|\text{Modelo}_A)} {P(\text{Datos}|\text{Modelo}_B)} \only<4>{\phantom}{\frac{P(\text{Modelo}_A)}{P(\text{Modelo}_B)}}
+% \end{split}
+% \end{equation*}
+% \end{textblock}
+% }
+
+\only<2->{
+\begin{textblock}{130}(18,38)
+ \begin{flalign*}
+ P(\text{Dat\en{a}\es{os}} = \{d_1, \, d_2, \, \dots \} | \, \text{Model\es{o}}) & =
+\only<3>{ \text{\Large \,Regla de la suma}}
+\only<4>{ \text{\Large \,Regla del producto}}
+ \only<5->{P(d_1|\text{Model\es{o}})P(d_2|d_1,\text{Model\es{o}}) \dots} &&
+\end{flalign*}
+\end{textblock}
+}
+
+
+\only<6,10>{
+\begin{textblock}{80}(60,22)
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+}
+\end{textblock}
+}
+\only<7-8>{
+\begin{textblock}{80}(60,22)
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[factor, minimum size=1cm, xshift=3cm] (p3) {} ;
+}
+\end{textblock}
+}
+\only<9>{
+\begin{textblock}{80}(60,22)
+\tikz{
+    \node[det, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[det, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[det, minimum size=1cm, xshift=3cm] (p3) {} ;
+}
+\end{textblock}
+}
+\only<11-12>{
+\begin{textblock}{80}(60,22)
+\tikz{
+    \node[factor, minimum size=1cm] (p1) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[factor, minimum size=1cm, xshift=1.5cm] (p2) {} ;
+    \node[det, minimum size=1cm, xshift=3cm] (p3) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/dedo.png}} ;
+}
+\end{textblock}
+}
+\only<13>{
+\begin{textblock}{80}(60,22)
+\tikz{
+    \node[det, minimum size=1cm] (p1) {} ;
+    \node[det, minimum size=1cm, xshift=1.5cm] (p2) {\includegraphics[width=0.07\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[det, minimum size=1cm, xshift=3cm] (p3) {} ;
+}
+\end{textblock}
+}
+
+
+\only<6>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$} \\ \hline
+  $s_1$ & $0$ & $0$ & $0$ &   $0$ \\ \hline
+  $s_2$ & $1/6$ & $0$ & $1/3$ &  $1/2$ \\  \hline
+  $s_3$ & $1/6$ & $1/3$ & $0$ & $1/2$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<7>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, &  \phantom{$\bm{1/2}$}  \\ \hline
+  $\gray s_1$ & $\gray0$ & $\gray0$ & $\gray0$ &   $\gray 0$ \\ \hline
+  $\bm{s_2}$ & $1/6$ & $0$ & $1/3$ &  $\bm{1/2}$ \\  \hline
+  $\gray s_3$ & $\gray1/6$ & $\gray1/3$ & $\gray0$ & $\gray1/2$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<8>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+  $s_2$ & $1/3$ & $0$ & $2/3$ &  1 \\  \hline
+ & & & &\\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<9>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $\bm{r_1}$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+  $s_2$ & $\bm{1/3}$ & $0$ & $2/3$ &  1 \\  \hline
+ & & & &\\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<10>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$} \\ \hline
+  $s_1$ & $0$ & $0$ & $0$ &   $0$ \\ \hline
+  $s_2$ & $1/6$ & $0$ & $1/3$ &  $1/2$ \\  \hline
+  $s_3$ & $1/6$ & $1/3$ & $0$ & $1/2$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<11>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, &  \phantom{$\bm{1/2}$}  \\ \hline
+  $\gray s_1$ & $\gray0$ & $\gray0$ & $\gray0$ &   $\gray 0$ \\ \hline
+  $\gray s_2$ & $\gray1/6$ & $\gray0$ & $\gray1/3$ &  $\gray1/2$ \\  \hline
+  $\bm{s_3}$ & $1/6$ & $1/3$ & $0$ & $\bm{1/2}$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<12>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+ & & & &\\ \hline
+ $s_3$ & $1/3$ & $2/3$ & $0$ &  1 \\  \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<13>{
+\begin{textblock}{80}(80,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $\bm{r_2}$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+ & & & &\\ \hline
+ $s_3$ & $1/3$ & $\bm{2/3}$ & $0$ &  1 \\  \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<6>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/3}$}  \\ \hline
+  $s_1$ & $0$ & $1/6$ & $1/6$ &   $1/3$ \\ \hline
+  $s_2$ & $1/6$ & $0$ & $1/6$ &  $1/3$ \\  \hline
+  $s_3$ & $1/6$ & $1/6$ & $0$ & $1/3$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<7>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+ \phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/3}$} \\ \hline
+  $\gray s_1$ & $\gray0$ & $\gray1/6$ & $\gray1/6$ &   $\gray 1/3$ \\ \hline
+  $\bm{s_2}$ & $1/6$ & $0$ & $1/6$ &  $\bm{1/3}$ \\  \hline
+  $\gray s_3$ & $\gray1/6$ & $\gray1/6$ & $\gray0$ & $\gray1/3$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<8>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+  $s_2$ & $1/2$ & $0$ & $1/2$ &  1 \\  \hline
+ & & & &\\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<9>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $\bm{r_1}$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+  $s_2$ & $\bm{1/2}$ & $0$ & $1/2$ &  1 \\  \hline
+ & & & &\\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<10>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/3}$}  \\ \hline
+  $s_1$ & $0$ & $1/6$ & $1/6$ &   $1/3$ \\ \hline
+  $s_2$ & $1/6$ & $0$ & $1/6$ &  $1/3$ \\  \hline
+  $s_3$ & $1/6$ & $1/6$ & $0$ & $1/3$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<11>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+ \phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/3}$} \\ \hline
+  $\gray s_1$ & $\gray0$ & $\gray1/6$ & $\gray1/6$ &   $\gray 1/3$ \\ \hline
+  $\gray s_2$ & $\gray1/6$ & $\gray0$ & $\gray1/6$ &  $\gray1/3$ \\  \hline
+  $\bm{s_3}$ & $1/6$ & $1/6$ & $0$ & $\bm{1/3}$ \\ \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<12>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $r_2$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+ & & & &\\ \hline
+ $s_3$ & $1/2$ & $1/2$ & $0$ &  1 \\  \hline
+  \end{tabular}
+\end{textblock}
+}
+\only<13>{
+\begin{textblock}{80}(0,52) \centering
+\begin{tabular}{|c|c|c|c||c|} \hline  \setlength\tabcolsep{0.4cm}
+\phantom{$\bm{s_2}$} & \, $r_1$ \, &  \, $\bm{r_2}$ \, & \, $r_3$ \, & \phantom{$\bm{1/2}$}  \\ \hline
+            & & &  &  \\ \hline
+ & & & &\\ \hline
+ $s_3$ & $1/2$ & $\bm{1/2}$ & $0$ &  1 \\  \hline
+  \end{tabular}
+\end{textblock}
+}
+
+
+
+\begin{textblock}{80}(80,73) \centering
+ \begin{equation*}
+ \onslide<6->{ P(\text{D}|\text{M}) }  \onslide<7->{= \frac{1}{2}} \, \onslide<9->{\frac{1}{3}} \, \onslide<11->{\frac{1}{2}} \, \onslide<13>{\frac{2}{3}}
+ \end{equation*}
+\end{textblock}
+\begin{textblock}{80}(0,73) \centering
+\begin{equation*}
+ \onslide<6->{ P(\text{D}|\text{M})}  \onslide<7->{= \frac{1}{3}} \, \onslide<9->{\frac{1}{2}} \, \onslide<11->{\frac{1}{3}} \, \onslide<13>{\frac{1}{2}}
+ \end{equation*}
+\end{textblock}
+
+
+
+\end{frame}
+
+
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3)
+\centering \LARGE Evaluación de modelos causales
+\end{textblock}
+
+\only<1->{
+
+\begin{textblock}{140}(10,12)
+\centering
+\includegraphics[width=0.66\textwidth]{../figuras/MontyHall/monty_hall_selection.pdf} \hspace{2cm}
+\end{textblock}
+
+\begin{textblock}{80}(86,12)
+\centering
+\scalebox{0.5}{
+\tikz{
+
+    \node[latent] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d] (nd) {\Large $s$} ;
+
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $r$} ;
+
+
+    \node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c] (nc) {\Large $c$} ;
+
+    \edge {r,c} {d};
+}
+}
+\end{textblock}
+
+
+\begin{textblock}{80}(86,48)
+\centering
+\scalebox{0.5}{
+ \tikz{
+    \node[latent,] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $r$} ;
+
+
+    \node[latent, below=of r] (d) {\includegraphics[width=0.10\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const, left=of d] (nd) {\Large $s$} ;
+
+    \edge {r} {d};
+
+}
+}
+\end{textblock}
+}
+
+
+\only<2>{
+\begin{textblock}{140}(10,76) \centering
+  \Large ¿Qué pasaría con la evaluación de modelos si la persona que da la pista a veces se olvida de tener en cuenta la caja que elegimos?
+\end{textblock}
+}
+
+
+\end{frame}
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3) \centering \LARGE Modelo causal completo \\ \large
+\end{textblock}
+
+
+\only<1-2>{
+\begin{textblock}{160}(0,14) \centering \Large
+\textbf{Creamos un nuevo modelo que represente la realidad causal}
+\end{textblock}
+}
+
+\only<2>{
+\begin{textblock}{160}(0,25)
+\centering
+\scalebox{0.6}{
+\tikz{
+    \node[invisible] (id) {};
+    \node[latent, left=of id, xshift=-3.5cm] (d) {\includegraphics[width=0.05\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d] (nd) {\Large $P(s_t|r_t)$} ;
+    \node[const, below=of d, yshift=-0.2cm] (restricciones) {$s_t \neq r_t$};
+
+
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $P(r_t)$} ;
+
+
+    \node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c] (nc) {\Large $P(c_t)$} ;
+
+    \node[invisible, above=of c, yshift=0.1cm] (ic) {};
+
+
+    \edge {r} {d};
+    %\plate {repeticiones} {(nr)(c)(restricciones)} {$t \in \{0, \dots, T-1\}$};
+
+
+    \node[invisible] (id_1) {};
+    \node[latent, left=of id, xshift=3.5cm] (d_1) {\includegraphics[width=0.05\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d_1] (nd) {\Large $P(s_t|r_t,c_t)$} ;
+    \node[const, below=of d_1, yshift=-0.2cm] (restricciones_1) {$s_t \neq r_t \text{, } s_t \neq c_t$};
+
+
+    \node[latent, above=of d_1, xshift=-1.5cm] (r_1) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r_1] (nr_1) {\Large $P(r_t)$} ;
+
+
+    \node[latent, fill=black!30, above=of d_1, xshift=1.5cm] (c_1) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c_1] (nc_1) {\Large $P(c_t)$} ;
+
+    \edge {r_1,c_1} {d_1};
+
+    \node[latent, yshift=4.8cm, xshift=-2.4cm ] (a) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/prendido-apagado.png}};
+    \node[const,left=of a] (pm) {\Large $P(a_t|p) $} ;
+    \node[const,right=of a] (nm) {\Large Se acordó o no?} ;
+
+
+    \node[latent, above=of a, yshift=-0.3cm] (m) {\includegraphics[width=0.06\textwidth]{../auxiliar/download/cerebro.jpg}};
+    \node[const,left=of m] (pm) {\Large $P(p) $} ;
+    \node[const,right=of m] (nm) {\Large Qué memoria tiene?} ;
+
+    \vgate {M} {(nr)(ic)(restricciones)} {$\bm{a_t=0}$} {(nr_1)(c_1)(restricciones_1)} {$\bm{a_t=1}$} {a};
+
+
+    \edge {m} {a};
+
+    \plate {B} {(a)(M)} {$t \in \{0, \dots, T-1\} $};
+}
+}
+\end{textblock}
+}
+
+
+\only<3>{
+\begin{textblock}{140}(10,18)
+\centering
+\includegraphics[width=0.66\textwidth]{../figuras/MontyHall/posterior2.pdf}
+\end{textblock}
+}
+
+\end{frame}
+
+
+
+\begin{frame}[plain]
+\begin{textblock}{160}(0,3) \centering \LARGE
+Inteligencia causal vs artificial \\ \large
+¿Podemos hacer algo mejor?
+\end{textblock}
+
+\only<1>{
+\begin{textblock}{76}(2,18)
+\centering
+\scalebox{0.6}{
+\tikz{
+    \node[invisible] (id) {};
+    \node[latent, left=of id, xshift=-3.5cm] (d) {\includegraphics[width=0.1\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d] (nd) {\Large $P(s_t|r_t)$} ;
+    \node[const, below=of d, yshift=-0.2cm] (restricciones) {$s_t \neq r_t$};
+
+
+    \node[latent, above=of d, xshift=-1.5cm] (r) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r] (nr) {\Large $P(r_t)$} ;
+
+
+    \node[latent, fill=black!30, above=of d, xshift=1.5cm] (c) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c] (nc) {\Large $P(c_t)$} ;
+
+    \node[invisible, above=of c, yshift=0.1cm] (ic) {};
+
+
+    \edge {r} {d};
+    %\plate {repeticiones} {(nr)(c)(restricciones)} {$t \in \{0, \dots, T-1\}$};
+
+
+    \node[invisible] (id_1) {};
+    \node[latent, left=of id, xshift=3.5cm] (d_1) {\includegraphics[width=0.1\textwidth]{../auxiliar/download/dedo.png}} ;
+    \node[const,left=of d_1] (nd) {\Large $P(s_t|r_t,c_t)$} ;
+    \node[const, below=of d_1, yshift=-0.2cm] (restricciones_1) {$s_t \neq r_t \text{, } s_t \neq c_t$};
+
+
+    \node[latent, above=of d_1, xshift=-1.5cm] (r_1) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/regalo.png}} ;
+    \node[const,left=of r_1] (nr_1) {\Large $P(r_t)$} ;
+
+
+    \node[latent, fill=black!30, above=of d_1, xshift=1.5cm] (c_1) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerradura.png}} ;
+    \node[const,left=of c_1] (nc_1) {\Large $P(c_t)$} ;
+
+    \edge {r_1,c_1} {d_1};
+
+    \node[latent, yshift=4.8cm, xshift=-2.3cm ] (a) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/prendido-apagado.png}};
+    \node[const,left=of a] (pm) {\Large $P(a_t|p) $} ;
+    \node[const,right=of a] (nm) {\Large } ;
+
+
+    \node[latent, above=of a, yshift=-0.3cm] (m) {\includegraphics[width=0.12\textwidth]{../auxiliar/download/cerebro.jpg}};
+    \node[const,left=of m] (pm) {\Large $P(p) $} ;
+    \node[const,right=of m] (nm) {\Large } ;
+
+    \vgate {M} {(nr)(ic)(restricciones)} {$\bm{a_t=0}$} {(nr_1)(c_1)(restricciones_1)} {$\bm{a_t=1}$} {a};
+
+
+    \edge {m} {a};
+
+    \plate {B} {(a)(M)} {$t \in \{0, \dots, T-1\} $};
+}
+}
+\end{textblock}
+}
+\only<1>{
+\begin{textblock}{78}(90,44) \LARGE
+\textbf{vs}
+\end{textblock}
+\begin{textblock}{100}(100,30) \Large
+\includegraphics[width=0.16\textwidth]{../auxiliar/download/claudeAI.png}
+\end{textblock}
+\begin{textblock}{100}(100,50) \Large
+\includegraphics[width=0.16\textwidth]{../auxiliar/download/geminiAI.jpeg}
+\end{textblock}
+\begin{textblock}{100}(120,32) \Large
+\includegraphics[width=0.16\textwidth]{../auxiliar/download/deepseek.png}
+\end{textblock}
+\begin{textblock}{100}(123,48) \Large
+\includegraphics[width=0.16\textwidth]{../auxiliar/download/chatGPT.png}
+\end{textblock}
+}
+
+
+
+
+\only<2->{
+\begin{textblock}{160}(0,13)
+\begin{gather*}
+- \overbrace{\log \lim_{T\rightarrow \infty} P(\text{Datos}_T|\text{Modelo Causal})^{1/T}}^{\hfrac{\text{\normalsize Tasa de sorpresa en}}{\text{\normalsize órdenes de magnitud}} } \\
+\onslide<3->{
+= \\
+  \underbrace{\sum_{c,s,r} \underbrace{\phantom{\big( }P(c,s,r|\text{Realidad Causal})}_{\hfrac{\text{\small Probabilidad de que}}{\text{\small se genere el dato}}} \cdot \underbrace{\big(-\log P(c,s,r|\text{Modelo Causal})\big)}_{\hfrac{\text{\small \phantom{q}Información en\phantom{q}}}{\text{\small órdenes de magnitud}}}}_{\underset{\hfrac{\text{\small \phantom{q}Tasa de información\phantom{q}}}{\text{\small del sistema de comunicación}} }{\text{\Large Entropía cruzada}}}
+}
+\end{gather*}
+\end{textblock}
+}
+
+\only<4->{
+\begin{textblock}{160}(0,78)
+\centering \Large \textbf{No hay algoritmo de IA que pueda tener mejor desempeño que el } \\  \textbf{modelo que se corresponde con la realidad causal subyacente}
+\end{textblock}
+}
+
+\end{frame}
+
+
+\begin{frame}[plain,noframenumbering]
+\centering \vspace{0.5cm}
+\includegraphics[width=0.85\textwidth]{../auxiliar/download/BP.png}
+\end{frame}
+
+\end{document}
